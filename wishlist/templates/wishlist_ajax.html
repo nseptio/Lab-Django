@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block content %}
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $("#get-data").click(function(){
+        $.get(window.location.href.replace("ajax", "json"), function(data) {
+          $("#wishlist-data").empty();
+          data.forEach(function(item) {
+            $("#wishlist-data").append(
+              `<tr>
+                <td>${item.fields.nama_barang}</td>
+                <td>${item.fields.harga_barang}</td>
+                <td>${item.fields.deskripsi}</td>
+              </tr>`
+            );
+          });
+        });
+      });
+    });
+
+  </script>
+
+  <title>Wishlist Page</title>
+  <style>
+    nav {
+      margin-bottom: 30px;
+    }
+
+    footer {
+      background-color: black;
+      color: white;
+      width: 100%;
+      padding: 10px auto;
+
+      position: fixed;
+      bottom: 0;
+      left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid" class="navbar-brand">
+      <a class="navbar-brand" href="#">{{nama}}</a>
+
+      <a
+        class="btn btn-outline-light"
+        role="button"
+        href="{% url 'wishlist:logout' %}"
+        >Logout</a
+      >
+    </div>
+  </nav>
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Nama Barang</th>
+        <th scope="col">Harga Barang</th>
+        <th scope="col">Deskripsi</th>
+      </tr>
+    </thead>
+    <tbody id="wishlist-data">
+    </tbody>
+  </table>
+
+  <section>
+  
+    <form method="POST" action="{% url 'wishlist:add_barang_ajax' %}" id="wishlist-form">
+      {% csrf_token %}
+      <div>
+        <input type="text" name="judul" placeholder="Judul" />
+        <label for="">{{form.nama_barang.label}}</label>
+      </div>
+      <div>
+        <input type="text" name="harga_barang" placeholder="Harga Barang" />
+        <label for="">{{form.harga_barang.label}}</label>
+      </div>
+      <div>
+        <input type="text" name="deskripsi" placeholder="Deskripsi" />
+        <label for="">{{form.deskripsi.label}}</label>
+      </div>
+      <div>
+        <input type="submit" value="Tambah" />
+      </div>
+    </form>
+  </section>
+
+  <footer>
+    <p>Sesi terakhir login: {{ last_login }}</p>
+  </footer>
+</body>
+
+{% endblock content %} !
